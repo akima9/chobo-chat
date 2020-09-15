@@ -1,7 +1,7 @@
 <template>
-    <div class="w-1/5 bg-blue-200 p-2">
-        user list
-        <div v-for="user in users" :key="user.id">
+    <div class="w-1/5 bg-blue-200 p-10">
+        <p class="font-black text-3xl text-blue-900 mb-5">회원 목록</p>
+        <div v-for="user in userWithoutSignedInUser" :key="user.id" @click="selectChatWith(user.id)" class="cursor-pointer">
             {{ user.email }}
         </div>
     </div>
@@ -9,6 +9,17 @@
 
 <script>
 export default {
+    props : {
+            currentUser : {
+                type : Number,
+                required : true
+            }
+    },
+    computed : {
+        userWithoutSignedInUser(){
+            return this.users.filter(user => user.id !== this.currentUser);
+        }
+    },
     data(){
         return{
             users:[]
@@ -21,6 +32,11 @@ export default {
         }).catch(error => {
             console.log(error);
         });
+    },
+    methods : {
+        selectChatWith(userId) {
+            this.$emit('selectChatWith', userId);
+        }
     }
 }
 </script>
