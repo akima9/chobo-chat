@@ -1,10 +1,17 @@
 <template>
     <div class="flex flex-1">
-        <ChatUserList :current-user="currentUser" @selectChatWith="selectChatWith"></ChatUserList>
-        <div v-if="chatWith" class="w-4/5 flex flex-col">
-            <ChatArea></ChatArea>
+        <ChatUserList 
+            :current-user="currentUser" 
+            @selectChatWith="selectChatWith"/>
+        <div 
+            v-if="chatWith" 
+            class="w-4/5 flex flex-col">
+            <ChatArea 
+                :chat-id="chatWith"/>
             <div class="flex-initial p-2">
-                <input type="text" class="w-full p-3 border border-solid border-blue-300">
+                <input type="text" class="w-full p-3 border border-solid border-blue-300"
+                    @keyup.enter="submit"
+                    v-model="text">
             </div>
         </div>
         <div v-else class="w-4/5 p-10">
@@ -29,7 +36,8 @@
         },
         data() {
             return {
-                chatWith : null
+                chatWith : null,
+                text : ''
             }
         },
         mounted() {
@@ -38,6 +46,13 @@
         methods : {
             selectChatWith(value) {
                 this.chatWith = value;
+            },
+            submit(){
+                axios.post("/api/messages", {
+                    text : this.text,
+                    to : this.chatWith,
+                    from : this.currentUser
+                });
             }
         }
     }

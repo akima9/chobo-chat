@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::prefix('messages')->group(function(){
-    Route::post('/', 'MessageController@store');
+    Route::post('/', [\App\Http\Controllers\MessageController::class, 'store']);
 });
 
 Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);

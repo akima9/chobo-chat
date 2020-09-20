@@ -1925,6 +1925,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1940,7 +1947,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      chatWith: null
+      chatWith: null,
+      text: ''
     };
   },
   mounted: function mounted() {
@@ -1949,6 +1957,13 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     selectChatWith: function selectChatWith(value) {
       this.chatWith = value;
+    },
+    submit: function submit() {
+      axios.post("/api/messages", {
+        text: this.text,
+        to: this.chatWith,
+        from: this.currentUser
+      });
     }
   }
 });
@@ -1970,7 +1985,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    chatId: {
+      type: Number,
+      required: true
+    }
+  }
+});
 
 /***/ }),
 
@@ -1983,6 +2005,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -19693,7 +19720,42 @@ var render = function() {
         ? _c(
             "div",
             { staticClass: "w-4/5 flex flex-col" },
-            [_c("ChatArea"), _vm._v(" "), _vm._m(0)],
+            [
+              _c("ChatArea", { attrs: { "chat-id": _vm.chatWith } }),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex-initial p-2" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.text,
+                      expression: "text"
+                    }
+                  ],
+                  staticClass: "w-full p-3 border border-solid border-blue-300",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.text },
+                  on: {
+                    keyup: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      return _vm.submit($event)
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.text = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ],
             1
           )
         : _c("div", { staticClass: "w-4/5 p-10" }, [
@@ -19703,19 +19765,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex-initial p-2" }, [
-      _c("input", {
-        staticClass: "w-full p-3 border border-solid border-blue-300",
-        attrs: { type: "text" }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -19738,7 +19788,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "flex-1 p-10" }, [
-    _vm._v("\n    chat area test\n")
+    _vm._v("\n    chat area test " + _vm._s(_vm.chatId) + "\n")
   ])
 }
 var staticRenderFns = []
@@ -19776,7 +19826,8 @@ var render = function() {
           "div",
           {
             key: user.id,
-            staticClass: "cursor-pointer",
+            staticClass:
+              "cursor-pointer mb-5 hover:text-orange-600 hover:font-black",
             on: {
               click: function($event) {
                 return _vm.selectChatWith(user.id)
