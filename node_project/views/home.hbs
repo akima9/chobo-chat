@@ -1,0 +1,22 @@
+<div class="ui main text container">
+    <form method="POST" action="/">
+        <div class="ui action input">
+            <input type="text" name="query" placeholder="Search...">
+            <button type="submit" class="ui button">Search</button>
+        </div>
+    </form>
+    {{#each words}}
+        <div class="card flex-box">
+            <div class="flex-1 main-word">
+                <h1>{{this.word}}</h1>
+            </div>
+            <div class="flex-1 word-list">
+                <ul>
+                    {{#each this.definition}}
+                        <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    {{/each}}
+</div>
